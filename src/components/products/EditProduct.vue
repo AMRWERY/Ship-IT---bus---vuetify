@@ -151,6 +151,7 @@ export default {
         .catch((error) => {
           console.error("Error updating document: ", error);
         });
+      this.$router.push("/product-list");
     },
     async getProduct() {
       const docSnap = await getDoc(doc(db, "products", this.id));

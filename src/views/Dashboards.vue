@@ -65,9 +65,6 @@
     <v-row>
       <Cards />
     </v-row>
-    <v-row>
-      <TaskStats />
-    </v-row>
   </v-container>
 </template>
 
@@ -76,11 +73,10 @@ import Bar from "@/components/dashboards/bar/Bar.vue";
 import Line from "@/components/dashboards/line/Line.vue";
 import Scatter from "@/components/dashboards/scatter/Scatter.vue";
 import Cards from "@/components/dashboards/Cards.vue";
-import TaskStats from "@/components/dashboards/TaskStats.vue";
 
 export default {
   name: "Dashboard",
 
-  components: { Bar, Line, Scatter, Cards, TaskStats },
+  components: { Bar, Line, Scatter, Cards },
 };
 </script>

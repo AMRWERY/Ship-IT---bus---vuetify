@@ -159,6 +159,7 @@ export default {
         const docRef = await addDoc(colRef, dataObj);
         console.log("Document was created with ID:", docRef.id);
       }
+      this.$router.push("/product-list");
     },
     pushImg(img) {
       this.img.push(img);
