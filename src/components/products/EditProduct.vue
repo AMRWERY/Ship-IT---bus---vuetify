@@ -104,6 +104,8 @@ import db from "@/firebase/config";
 export default {
   name: "EditProduct",
 
+  props: ["item"],
+
   data() {
     return {
       title: "",
@@ -133,7 +135,7 @@ export default {
 
   methods: {
     updateProduct() {
-      const productRef = doc(db, "products", this.id);
+      const productRef = doc(db, "products", this.item?.id);
       const updateData = {
         title: this.title,
         price: this.price,
@@ -151,10 +153,9 @@ export default {
         .catch((error) => {
           console.error("Error updating document: ", error);
         });
-      this.$router.push("/product-list");
     },
     async getProduct() {
-      const docSnap = await getDoc(doc(db, "products", this.id));
+      const docSnap = await getDoc(doc(db, "products", this.item?.id));
       if (docSnap.exists()) {
         let doc = docSnap.data();
         this.title = doc.title;
@@ -162,7 +163,6 @@ export default {
         this.originalPrice = doc.originalPrice;
         this.img = doc.img;
         this.qty = doc.qty;
-        /* this.select = doc.select; */
         this.select = doc.category;
         this.dec = doc.dec;
       } else {
@@ -172,7 +172,6 @@ export default {
   },
 
   mounted() {
-    this.id = this.$route.params.id;
     this.getProduct();
   },
 };

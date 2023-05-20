@@ -46,7 +46,7 @@ const routes = [
   {
     path: "/orders-tracking",
     name: "OrdersTracking",
-    component: () => import("../components/OrdersTracking.vue"),
+    component: () => import("../components/orders/OrdersTracking.vue"),
   },
 ];
 

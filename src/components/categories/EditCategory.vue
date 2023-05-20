@@ -14,37 +14,35 @@
         offset-md="2"
         class="flex-column justify-center align-center"
       >
-        <v-card>
-          <form @submit.prevent="updateCategory">
-            <v-col>
-              <v-text-field
-                label="Title"
-                type="text"
-                required
-                v-model.trim="name"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Image Url"
-                type="url"
-                required
-                v-model.trim="img"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <img :src="img" height="300" />
-            </v-col>
-            <v-col>
-              <v-btn
-                color="indigo-lighten-1"
-                type="submit"
-                :disabled="!formIsValid"
-                >Update</v-btn
-              >
-            </v-col>
-          </form>
-        </v-card>
+        <form @submit.prevent="updateCategory">
+          <v-col>
+            <v-text-field
+              label="Title"
+              type="text"
+              required
+              v-model.trim="name"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              label="Image Url"
+              type="url"
+              required
+              v-model.trim="img"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <img :src="img" height="300" />
+          </v-col>
+          <v-col>
+            <v-btn
+              color="indigo-lighten-1"
+              type="submit"
+              :disabled="!formIsValid"
+              >Update</v-btn
+            >
+          </v-col>
+        </form>
       </v-col>
     </v-row>
   </v-container>
@@ -56,6 +54,8 @@ import db from "@/firebase/config";
 
 export default {
   name: "EditCategory",
+
+  props: ["item"],
 
   data() {
     return {
@@ -73,9 +73,9 @@ export default {
 
   methods: {
     updateCategory() {
-      const productRef = doc(db, "categories", this.id);
+      const productRef = doc(db, "categories", this.item?.id);
       const updateData = {
-        title: this.name,
+        name: this.name,
         img: this.img,
       };
 
@@ -86,10 +86,9 @@ export default {
         .catch((error) => {
           console.error("Error updating document: ", error);
         });
-      this.$router.push("/categories");
     },
-    async getProduct() {
-      const docSnap = await getDoc(doc(db, "categories", this.id));
+    async getCategory() {
+      const docSnap = await getDoc(doc(db, "categories", this.item?.id));
       if (docSnap.exists()) {
         let doc = docSnap.data();
         this.name = doc.name;
@@ -101,8 +100,7 @@ export default {
   },
 
   mounted() {
-    this.id = this.$route.params.id;
-    this.getProduct();
+    this.getCategory();
   },
 };
 </script>

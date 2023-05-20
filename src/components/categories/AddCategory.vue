@@ -14,45 +14,43 @@
         offset-md="2"
         class="flex-column justify-center align-center"
       >
-        <v-card>
-          <form @submit.prevent="addCategory">
-            <v-col>
-              <v-text-field
-                label="Title"
-                type="text"
-                required
-                v-model.trim="name"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="In Stock"
-                type="number"
-                required
-                v-model.trim="inStock"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Image Url"
-                type="url"
-                required
-                v-model.trim="img"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <img :src="img" height="300" />
-            </v-col>
-            <v-col>
-              <v-btn
-                color="indigo-lighten-1"
-                type="submit"
-                :disabled="!formIsValid"
-                >Add</v-btn
-              >
-            </v-col>
-          </form>
-        </v-card>
+        <form @submit.prevent="addCategory">
+          <v-col>
+            <v-text-field
+              label="Title"
+              type="text"
+              required
+              v-model.trim="name"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              label="In Stock"
+              type="number"
+              required
+              v-model.trim="inStock"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              label="Image Url"
+              type="url"
+              required
+              v-model.trim="img"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <img :src="img" height="300" />
+          </v-col>
+          <v-col>
+            <v-btn
+              color="indigo-lighten-1"
+              type="submit"
+              :disabled="!formIsValid"
+              >Add</v-btn
+            >
+          </v-col>
+        </form>
       </v-col>
     </v-row>
   </v-container>

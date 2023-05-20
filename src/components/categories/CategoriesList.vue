@@ -4,6 +4,27 @@
       <v-col xs="12">
         <h2 class="text-red">Categories</h2>
       </v-col>
+      <v-col xs="12">
+        <div>
+          <v-dialog v-model="dialog" width="auto">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                icon="mdi mdi-plus"
+                class="float-right"
+                color="purple-lighten-2"
+                v-bind="props"
+              >
+              </v-btn>
+            </template>
+
+            <v-card width="800">
+              <v-card-text>
+                <AddCategory />
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+        </div>
+      </v-col>
     </v-row>
     <v-row>
       <v-col
@@ -16,32 +37,45 @@
       >
         <v-table>
           <thead>
-            <tr>
-              <th class="text-left">Name</th>
-              <th class="text-left">Image</th>
-              <th class="text-left">Stock</th>
-              <th class="text-left"></th>
+            <tr class="bg-blue-lighten-3">
+              <th class="text-left text-black">Name</th>
+              <th class="text-left text-black">Image</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in categories" :key="item">
               <td>{{ item.name }}</td>
-              <td>
-                <v-avatar :image="item.img" size="60"></v-avatar>
+              <td class="py-2">
+                <img :src="item.img" />
               </td>
               <td>
-                <v-chip variant="elevated" color="primary">
-                  {{ item.inStock }}
-                </v-chip>
+                <v-dialog transition="dialog-bottom-transition" width="auto">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      color="primary"
+                      v-bind="props"
+                      icon="mdi mdi-file-edit-outline"
+                    ></v-btn>
+                  </template>
+                  <v-card width="800">
+                    <v-card-text>
+                      <EditCategory
+                        :item="item"
+                        @update-category="editCategory($event)"
+                      />
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
               </td>
               <td>
                 <v-btn
-                  variant="outlined"
-                  rounded="xl"
-                  color="teal-darken-1"
-                  @click="editCategory(item)"
-                  >Update</v-btn
-                >
+                  icon="mdi mdi-delete"
+                  color="red-lighten-1"
+                  density="comfortable"
+                  @click="deleteCategory(item)"
+                ></v-btn>
               </td>
             </tr>
           </tbody>
@@ -52,15 +86,27 @@
 </template>
 
 <script>
-import { getDocs, collection, query } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  query,
+  doc,
+  deleteDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import db from "@/firebase/config";
+import AddCategory from "./AddCategory.vue";
+import EditCategory from "./EditCategory.vue";
 
 export default {
   name: "CategoriesList",
 
+  components: { AddCategory, EditCategory },
+
   data() {
     return {
       categories: [],
+      dialog: false,
     };
   },
 
@@ -81,12 +127,39 @@ export default {
     editCategory(item) {
       let id = item?.id;
       console.log(id);
-      this.$router.push("/edit-category/" + id);
+    },
+    async deleteCategory(item) {
+      await deleteDoc(doc(db, "categories", item.id));
+      const index = this.categories.findIndex((c) => c.id === item.id);
+      if (index !== -1) {
+        this.categories.splice(index, 1);
+      }
     },
   },
 
   mounted() {
-    this.getData();
+    const categoriesRef = collection(db, "categories");
+
+    onSnapshot(categoriesRef, (snapshot) => {
+      const categories = [];
+
+      snapshot.forEach((doc) => {
+        let pro = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        categories.push(pro);
+      });
+      this.categories = categories;
+    });
   },
 };
 </script>
+
+<style scoped>
+img {
+  border-radius: 100%;
+  height: 50px;
+  width: 50px;
+}
+</style>
